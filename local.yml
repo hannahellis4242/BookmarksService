@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  db:
+    image: mongo
+    restart: always
+    volumes:
+      - ./database/db:/data/db
+      - ./database/config:/data/configdb
+    userns_mode: keep-id
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+volumes:
+  data:
+  config:

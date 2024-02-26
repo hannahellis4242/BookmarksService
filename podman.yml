@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  userdb:
+    image: mongo
+    restart: always
+    volumes:
+      - ./user/db:/data/db
+      - ./user/config:/data/configdb
+    userns_mode: keep-id
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+  user:
+    build: ./User
+    restart: always
+    environment:
+      - HOST=${HOST}
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+    depends_on:
+      - userdb
+    expose:
+      - 5001
+    ports:
+      - 5001:5001
+volumes:
+  data:
+  config:
