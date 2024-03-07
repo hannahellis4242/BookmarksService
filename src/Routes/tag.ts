@@ -6,11 +6,12 @@ import readQuery from "./utils/readQuery";
 import LabelService from "../Service/LabelService";
 import TagService from "../Service/TagService";
 import handleError, { Errors } from "./utils/handleErrors";
+import readBody from "./utils/readBody";
 
 const link = (service: LabelService & LinkService & TagService) =>
   Router()
     .post("/", (req, res) =>
-      readQuery(req, "link", Errors.NoLink)
+      readBody(req, "link", Errors.NoLink)
         .then((link) =>
           service
             .saveLink({ link })
@@ -21,7 +22,7 @@ const link = (service: LabelService & LinkService & TagService) =>
             )
         )
         .then((urlID) =>
-          readQuery(req, "label", Errors.NoLabel)
+          readBody(req, "label", Errors.NoLabel)
             .then((tag) =>
               service
                 .saveLabel(tag)
