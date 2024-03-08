@@ -4,15 +4,15 @@ services:
     image: mongo
     restart: always
     volumes:
-      - ./user/db:/data/db
-      - ./user/config:/data/configdb
+      - ./database/db:/data/db
+      - ./database/config:/data/configdb
     userns_mode: keep-id
     expose:
       - 27017
     ports:
       - 27017:27017
-  user:
-    build: ./User
+  service:
+    build: .
     restart: always
     environment:
       - HOST=0.0.0.0
