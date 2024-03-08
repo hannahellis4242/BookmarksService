@@ -8,7 +8,7 @@ import TagService from "../Service/TagService";
 import handleError, { Errors } from "./utils/handleErrors";
 import readBody from "./utils/readBody";
 
-const link = (service: LabelService & LinkService & TagService) =>
+const tag = (service: LabelService & LinkService & TagService) =>
   Router()
     .post("/", (req, res) =>
       readBody(req, "link", Errors.NoLink)
@@ -68,4 +68,4 @@ const link = (service: LabelService & LinkService & TagService) =>
         .catch(handleError(res))
     );
 
-export default link;
+export default tag;
