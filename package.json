@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
+    "test":"jest",
     "watch": "tsc -w",
     "dev": "nodemon dist/main.js",
     "build": "tsc",
@@ -15,11 +16,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.19",
     "@types/uuid": "^9.0.8",
     "nodemon": "^3.0.3",
     "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
