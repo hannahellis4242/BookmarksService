@@ -11,13 +11,13 @@ const link = (service: LinkService) =>
     .post("/", (req, res) =>
       readBody(req, "link", Errors.NoLink)
         .then((link) => service.saveLink({link}))
-        .then((id) => res.status(StatusCodes.CREATED).send(id.value))
+        .then((id) => res.status(StatusCodes.CREATED).json(id.value))
         .catch(handleError(res))
     )
     .get("/", (req, res) =>
       readQuery(req, "link", Errors.NoLink)
         .then((link) => service.getLinkID({link}))
-        .then((id) => res.send(id.value))
+        .then((id) => res.json(id.value))
         .catch(handleError(res))
     )
     .delete("/", (req, res) =>

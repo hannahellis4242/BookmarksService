@@ -1,0 +1,15 @@
+image: node:alpine
+stages: 
+  - pre-build
+
+app test:
+  stage: pre-build
+  script:
+    - npm i
+    - npm test
+  artifacts:
+    when: always
+    paths:
+      - results/test-results.xml
+    reports:
+      junit: results/test-results.xml

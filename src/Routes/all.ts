@@ -1,12 +1,10 @@
 import { Router } from "express";
-import LinkService from "../Service/LinkService";
-import LabelService from "../Service/LabelService";
-import TagService from "../Service/TagService";
 import handleError, { Errors } from "./utils/handleErrors";
 import Bookmark from "../Model/Bookmark";
 import ServiceErrors from "../Service/ServiceErrors";
+import Service from "../Service/Service";
 
-const all = (service: LabelService & LinkService & TagService) =>
+const all = (service: Service) =>
   Router().get("/", (_, res) =>
     service
       .allLinks()
