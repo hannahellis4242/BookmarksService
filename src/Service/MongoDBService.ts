@@ -1,14 +1,11 @@
 import { MongoClient, ObjectId, WithId } from "mongodb";
 import ServiceErrors from "./ServiceErrors";
-import LinkService from "./LinkService";
 import LinkID, { linkId } from "./LinkID";
 import LabelID, { labelID } from "./LabelID";
 import TagID, { tagID } from "./TagID";
-import LabelService from "./LabelService";
-import TagService from "./TagService";
 import Link from "../Model/Link";
 import Label from "../Model/Label";
-import label from "../Routes/label";
+import Service from "./Service";
 
 export interface CollectionNames {
   readonly link: string;
@@ -21,8 +18,7 @@ interface Tag {
   link: ObjectId;
 }
 
-export default class MongoDBService
-  implements LinkService, LabelService, TagService
+export default class MongoDBService implements Service
 {
   private url: string;
   constructor(
