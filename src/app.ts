@@ -5,15 +5,16 @@ import all from "./Routes/all";
 import label from "./Routes/label";
 import link from "./Routes/link";
 import tag from "./Routes/tag";
+import Handler from "./Handlers/Handler";
 
-const createApp = (service: Service) => {
+const createApp = (service: Service, handler: Handler) => {
   const app = express();
   app.use(morgan("combined"));
   app.use(json());
 
-  app.use("/label", label(service));
-  app.use("/link", link(service));
-  app.use("/tag", tag(service));
+  app.use("/label", label(service, handler));
+  app.use("/link", link(service, handler));
+  app.use("/tag", tag(handler));
   app.use("/all", all(service));
 
   return app;

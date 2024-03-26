@@ -184,7 +184,7 @@ export default class MongoDBService implements Service {
           ? Promise.resolve(collection)
           : Promise.reject(ServiceErrors.AlreadyExists)
       )
-      .then((collection) => collection.insertOne({ label }))
+      .then((collection) => collection.insertOne(label))
       .then((doc) => labelID(doc.insertedId.toString()))
       .catch((error) => {
         console.error(`Link Service Error : ${error}`);

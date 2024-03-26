@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  userdb:
+  db:
     image: mongo
     restart: always
     volumes:
@@ -11,19 +11,6 @@ services:
       - 27017
     ports:
       - 27017:27017
-  user:
-    build: ./User
-    restart: always
-    environment:
-      - HOST=${HOST}
-      - PORT=${PORT}
-      - DB_HOST=${DB_HOST}
-    depends_on:
-      - userdb
-    expose:
-      - 5001
-    ports:
-      - 5001:5001
 volumes:
   data:
   config:
