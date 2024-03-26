@@ -5,6 +5,7 @@ import { Response } from "express";
 export const Errors = {
   NoLink: "NoLink",
   NoLabel: "NoLabel",
+  NoLabelParam: "NoLabelParam",
 } as const;
 
 export type Errors = ServiceErrors | (typeof Errors)[keyof typeof Errors];
@@ -14,6 +15,7 @@ const handleError = (res: Response) => (e: Errors) => {
     case Errors.NoLink:
       return res.status(StatusCodes.BAD_REQUEST).send("Link url required");
     case Errors.NoLabel:
+    case Errors.NoLabelParam:
       return res.status(StatusCodes.BAD_REQUEST).send("Label required");
     case ServiceErrors.AlreadyExists:
       return res.sendStatus(StatusCodes.CONFLICT);
