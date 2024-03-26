@@ -3,7 +3,7 @@ import LinkID from "./LinkID";
 import TagID from "./TagID";
 
 export default interface TagService{
-    addTag(linkId:LinkID,labelId:LabelID):Promise<TagID>;
+    saveTag(linkId:LinkID,labelId:LabelID):Promise<TagID>;
     allTags():Promise<TagID[]>;
     findTagsWithLabel(labelId:LabelID):Promise<TagID[]>;
     findTagsWithLink(linkId:LinkID):Promise<TagID[]>;
