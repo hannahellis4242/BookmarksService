@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId, WithId } from "mongodb";
 import ServiceErrors from "./ServiceErrors";
-import LinkID, { linkId } from "./LinkID";
+import LinkID, { linkID } from "./LinkID";
 import LabelID, { labelID } from "./LabelID";
 import TagID, { tagID } from "./TagID";
 import Link from "../Model/Link";
@@ -18,8 +18,7 @@ interface Tag {
   link: ObjectId;
 }
 
-export default class MongoDBService implements Service
-{
+export default class MongoDBService implements Service {
   private url: string;
   constructor(
     host: string,
@@ -34,15 +33,13 @@ export default class MongoDBService implements Service
       .connect()
       .then((client) => client.db(this.dbName))
       .then((db) => db.collection(this.collections.label))
-      .then((collection) =>
-        collection.find<WithId<Label>>({}).toArray()
-      )
+      .then((collection) => collection.find<WithId<Label>>({}).toArray())
       .then((existing) =>
-        existing.length !== 0 
+        existing.length !== 0
           ? Promise.resolve(existing)
           : Promise.reject(ServiceErrors.NotFound)
       )
-      .then((links) => links.map(({_id})=>labelID(_id.toString())))
+      .then((links) => links.map(({ _id }) => labelID(_id.toString())))
       .finally(() => client.close());
   }
   allLinks(): Promise<LinkID[]> {
@@ -51,15 +48,13 @@ export default class MongoDBService implements Service
       .connect()
       .then((client) => client.db(this.dbName))
       .then((db) => db.collection(this.collections.link))
-      .then((collection) =>
-        collection.find<WithId<Link>>({}).toArray()
-      )
+      .then((collection) => collection.find<WithId<Link>>({}).toArray())
       .then((existing) =>
-        existing.length !== 0 
+        existing.length !== 0
           ? Promise.resolve(existing)
           : Promise.reject(ServiceErrors.NotFound)
       )
-      .then((links) => links.map(({_id})=>linkId(_id.toString())))
+      .then((links) => links.map(({ _id }) => linkID(_id.toString())))
       .finally(() => client.close());
   }
   allTags(): Promise<TagID[]> {
@@ -68,15 +63,13 @@ export default class MongoDBService implements Service
       .connect()
       .then((client) => client.db(this.dbName))
       .then((db) => db.collection(this.collections.tag))
-      .then((collection) =>
-        collection.find<WithId<Tag>>({}).toArray()
-      )
+      .then((collection) => collection.find<WithId<Tag>>({}).toArray())
       .then((existing) =>
-        existing.length !== 0 
+        existing.length !== 0
           ? Promise.resolve(existing)
           : Promise.reject(ServiceErrors.NotFound)
       )
-      .then((tags) => tags.map(({_id})=>tagID(_id.toString())))
+      .then((tags) => tags.map(({ _id }) => tagID(_id.toString())))
       .finally(() => client.close());
   }
   getTagLabelID(tagID: TagID): Promise<LabelID> {
@@ -158,7 +151,7 @@ export default class MongoDBService implements Service
           ? Promise.resolve(existing.link)
           : Promise.reject(ServiceErrors.NotFound)
       )
-      .then((id) => linkId(id.toString()))
+      .then((id) => linkID(id.toString()))
       .finally(() => client.close());
   }
   getLink(id: LinkID): Promise<Link> {
@@ -177,16 +170,14 @@ export default class MongoDBService implements Service
       )
       .finally(() => client.close());
   }
-  saveLabel(label: string): Promise<LabelID> {
+  saveLabel(label: Label): Promise<LabelID> {
     const client = new MongoClient(this.url);
     return client
       .connect()
       .then((client) => client.db(this.dbName))
       .then((db) => db.collection(this.collections.label))
       .then((collection) =>
-        collection
-          .findOne({ label })
-          .then((existing) => ({ collection, existing }))
+        collection.findOne(label).then((existing) => ({ collection, existing }))
       )
       .then(({ collection, existing }) =>
         existing === null
@@ -203,13 +194,13 @@ export default class MongoDBService implements Service
       })
       .finally(() => client.close());
   }
-  getLabelID(label: string): Promise<LabelID> {
+  getLabelID(label: Label): Promise<LabelID> {
     const client = new MongoClient(this.url);
     return client
       .connect()
       .then((client) => client.db(this.dbName))
       .then((db) => db.collection(this.collections.label))
-      .then((collection) => collection.findOne({ label }))
+      .then((collection) => collection.findOne(label))
       .then((found) =>
         found
           ? Promise.resolve(found._id)
@@ -222,7 +213,7 @@ export default class MongoDBService implements Service
     //TODO
     throw new Error("Method not implemented.");
   }
-  addTag(linkID: LinkID, labelID: LabelID): Promise<TagID> {
+  saveTag(linkID: LinkID, labelID: LabelID): Promise<TagID> {
     const link = new ObjectId(linkID.value);
     const label = new ObjectId(labelID.value);
     const client = new MongoClient(this.url);
@@ -285,7 +276,7 @@ export default class MongoDBService implements Service
           ? Promise.resolve(found._id)
           : Promise.reject(ServiceErrors.NotFound)
       )
-      .then((id) => linkId(id.toString()))
+      .then((id) => linkID(id.toString()))
       .finally(() => client.close());
   }
   saveLink(link: Link): Promise<LinkID> {
@@ -303,7 +294,7 @@ export default class MongoDBService implements Service
           : Promise.reject(ServiceErrors.AlreadyExists)
       )
       .then((collection) => collection.insertOne(link))
-      .then((doc) => linkId(doc.insertedId.toString()))
+      .then((doc) => linkID(doc.insertedId.toString()))
       .catch((error) => {
         console.error(`Link Service Error : ${error}`);
         return error === ServiceErrors.AlreadyExists

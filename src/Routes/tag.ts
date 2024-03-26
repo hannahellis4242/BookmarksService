@@ -12,39 +12,41 @@ const tag = (service: LabelService & LinkService & TagService) =>
   Router()
     .post("/", (req, res) =>
       readBody(req, "link", Errors.NoLink)
+        .then((link) => ({ link }))
         .then((link) =>
           service
-            .saveLink({ link })
+            .saveLink(link)
             .catch((e) =>
               e === ServiceErrors.AlreadyExists
-                ? service.getLinkID({ link })
+                ? service.getLinkID(link)
                 : Promise.reject(e)
             )
         )
-        .then((urlID) =>
+        .then((linkId) =>
           readBody(req, "label", Errors.NoLabel)
-            .then((tag) =>
+            .then((label) => ({ label }))
+            .then((label) =>
               service
-                .saveLabel(tag)
+                .saveLabel(label)
                 .catch((e) =>
                   e === ServiceErrors.AlreadyExists
-                    ? service.getLabelID(tag)
+                    ? service.getLabelID(label)
                     : Promise.reject(e)
                 )
             )
-            .then((tagID) => ({ urlID, tagID }))
+            .then((labelId) => ({ linkId, labelId }))
         )
-        .then(({ urlID, tagID }) => service.addTag(urlID, tagID))
+        .then(({ linkId, labelId }) => service.saveTag(linkId, labelId))
         .then((id) => res.status(StatusCodes.CREATED).send(id.value))
         .catch(handleError(res))
     )
     .get("/:label", (req, res) => {
       const { label } = req.params;
       return service
-        .getLabelID(label)
+        .getLabelID({ label })
         .then((labelID) => service.findTagsWithLabel(labelID))
-        .then((tagIDs) =>
-          Promise.all(tagIDs.map((tagId) => service.getTagLinkID(tagId)))
+        .then((labelIds) =>
+          Promise.all(labelIds.map((labelId) => service.getTagLinkID(labelId)))
         )
         .then((linkIds) =>
           Promise.all(linkIds.map((link) => service.getLink(link)))
@@ -57,8 +59,8 @@ const tag = (service: LabelService & LinkService & TagService) =>
       readQuery(req, "link", Errors.NoLink)
         .then((link) => service.getLinkID({ link }))
         .then((linkId) => service.findTagsWithLink(linkId))
-        .then((tagIDs) =>
-          Promise.all(tagIDs.map((tagId) => service.getTagLabelID(tagId)))
+        .then((labelIds) =>
+          Promise.all(labelIds.map((labelId) => service.getTagLabelID(labelId)))
         )
         .then((labelIds) =>
           Promise.all(labelIds.map((labelId) => service.getLabel(labelId)))
