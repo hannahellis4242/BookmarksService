@@ -1,5 +1,5 @@
 import { FindLinkAction } from "../../LinkActions";
-import { MongoClient, WithId } from "mongodb";
+import { MongoClient } from "mongodb";
 import MongoDBConfig from "../MongoDBConfig";
 import Link from "../../../Model/Link";
 import DatabaseErrors from "../../DatabaseErrors";

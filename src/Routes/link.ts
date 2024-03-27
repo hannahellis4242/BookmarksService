@@ -12,12 +12,6 @@ import { ObjectId } from "mongodb";
 
 const link = (actions: LinkActions) => {
   const router = Router();
-  /*router.get("/tagged", (req, res) =>
-      readQuery(req, "label", Errors.NoLabel)
-        .then((label) => handler.readLabelLinks(label))
-        .then((links) => res.json(links))
-        .catch(handleError(res))
-    );*/
   router.post("/", (req, res) =>
     readBody(req, "link", Errors.NoLink)
       .then(makeLink) //move to model world

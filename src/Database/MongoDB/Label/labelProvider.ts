@@ -11,6 +11,6 @@ const labelProvider = (config: MongoDBConfig): LabelActions => ({
   read: readAction(config),
   update: updateAction(config),
   delete: deleteAction(config),
-  find: findAction,
+  find: findAction(config),
 });
 export default labelProvider;

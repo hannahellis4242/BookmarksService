@@ -3,29 +3,17 @@ import LabelActions from "../LabelActions";
 import LinkActions from "../LinkActions";
 import TagActions from "../TagActions";
 import {
-  createLabel,
   createTag,
-  deleteLabel,
   deleteTag,
-  findLabel,
   findTag,
   findTagsWithLabel,
   findTagsWithLink,
-  readLabel,
   readTag,
-  updateLabel,
   updateTag,
 } from "./Actions";
+import labelProvider from "./Label/labelProvider";
 import linkProvider from "./Link/linkProvider";
 import MongoDBConfig from "./MongoDBConfig";
-
-const labelProvider = (config: MongoDBConfig): LabelActions => ({
-  create: createLabel,
-  read: readLabel,
-  update: updateLabel,
-  delete: deleteLabel,
-  find: findLabel,
-});
 
 const tagProvider = (config: MongoDBConfig): TagActions => ({
   create: createTag,

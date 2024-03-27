@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import readBody from "./utils/readBody";
 import readQuery from "./utils/readQuery";
 import handleError, { Errors } from "./utils/handleErrors";
-import { makeLabel, makeLink } from "../Model/Adaptor";
+import { makeLabel } from "../Model/Adaptor";
 import readParam from "./utils/readParam";
 import { ObjectId } from "mongodb";
 import LabelActions from "../Database/LabelActions";
@@ -34,7 +34,7 @@ const label = (actions: LabelActions) => {
   router.put("/:id", (req, res) =>
     readParam(req, "id", Errors.NoIDParam)
       .then((id) =>
-        readBody(req, "label", Errors.NoLink).then((label) => ({ id, label }))
+        readBody(req, "label", Errors.NoLabel).then((label) => ({ id, label }))
       )
       .then(({ id, label }) => ({
         id: new ObjectId(id),
