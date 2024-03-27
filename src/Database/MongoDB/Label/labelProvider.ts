@@ -1,4 +1,4 @@
-import LinkActions from "../../LinkActions";
+import LabelActions from "../../LabelActions";
 import MongoDBConfig from "../MongoDBConfig";
 import createAction from "./createAction";
 import { deleteAction } from "./deleteAction";
@@ -6,11 +6,11 @@ import findAction from "./findAction";
 import readAction from "./readAction";
 import updateAction from "./updateAction";
 
-const linkProvider = (config: MongoDBConfig): LinkActions => ({
+const labelProvider = (config: MongoDBConfig): LabelActions => ({
   create: createAction(config),
   read: readAction(config),
   update: updateAction(config),
   delete: deleteAction(config),
-  find: findAction(config),
+  find: findAction,
 });
-export default linkProvider;
+export default labelProvider;

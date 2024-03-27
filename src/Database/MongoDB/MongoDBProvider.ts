@@ -8,7 +8,6 @@ import {
   deleteLabel,
   deleteTag,
   findLabel,
-  findLink,
   findTag,
   findTagsWithLabel,
   findTagsWithLink,

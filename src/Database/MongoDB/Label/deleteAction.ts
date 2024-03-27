@@ -1,16 +1,16 @@
 import { MongoClient } from "mongodb";
-import { DeleteLinkAction } from "../../LinkActions";
 import MongoDBConfig from "../MongoDBConfig";
 import DatabaseErrors from "../../DatabaseErrors";
+import { DeleteLabelAction } from "../../LabelActions";
 
 export const deleteAction =
-  ({ url, database, collections }: MongoDBConfig): DeleteLinkAction =>
+  ({ url, database, collections }: MongoDBConfig): DeleteLabelAction =>
   (id) => {
     const client = new MongoClient(url);
     return client
       .connect()
       .then((client) => client.db(database))
-      .then((db) => db.collection(collections.link))
+      .then((db) => db.collection(collections.label))
       .then((collection) => collection.deleteOne({ _id: id }))
       .then(({ deletedCount }) =>
         deletedCount === 1

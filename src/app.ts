@@ -14,8 +14,8 @@ const createApp =
     app.use(morgan("combined"));
     app.use(json());
 
-    app.use("/label", label(service, handler));
-    app.use("/link", link(dbActions.link)(service, handler));
+    app.use("/label", label(dbActions.label));
+    app.use("/link", link(dbActions.link));
     app.use("/tag", tag(handler));
     app.use("/all", all(service));
 

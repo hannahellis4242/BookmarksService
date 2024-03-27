@@ -1,23 +1,54 @@
 import { Router } from "express";
-import LabelService from "../Service/LabelService";
-import handleError, { Errors } from "./utils/handleErrors";
+import { StatusCodes } from "http-status-codes";
+import readBody from "./utils/readBody";
 import readQuery from "./utils/readQuery";
-import Handler from "../Handlers/Handler";
+import handleError, { Errors } from "./utils/handleErrors";
+import { makeLabel, makeLink } from "../Model/Adaptor";
+import readParam from "./utils/readParam";
+import { ObjectId } from "mongodb";
+import LabelActions from "../Database/LabelActions";
 
-const label = (service: LabelService, handler: Handler) => {
+const label = (actions: LabelActions) => {
   const router = Router();
-  router.get("/all", (_, res) =>
-    service
-      .allLabels()
-      .then((labels) => Promise.all(labels.map((id) => service.getLabel(id))))
-      .then((labels) => labels.map(({ label }) => label))
-      .then((labels) => res.json(labels))
+  router.post("/", (req, res) =>
+    readBody(req, "label", Errors.NoLabel)
+      .then(makeLabel) //move to model world
+      .then(actions.create) //perform db action
+      .then((id) => res.status(StatusCodes.CREATED).json(id))
       .catch(handleError(res))
   );
-  router.get("/tagged", (req, res) =>
-    readQuery(req, "link", Errors.NoLink)
-      .then((link) => handler.readLinkLabels(link))
-      .then((labels) => res.json(labels))
+  router.get("/id", (req, res) =>
+    readQuery(req, "label", Errors.NoLabel)
+      .then(makeLabel)
+      .then(actions.find)
+      .then((id) => res.json(id))
+      .catch(handleError(res))
+  );
+  router.get("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) => new ObjectId(id))
+      .then(actions.read)
+      .then((id) => res.json(id))
+      .catch(handleError(res))
+  );
+  router.put("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) =>
+        readBody(req, "label", Errors.NoLink).then((label) => ({ id, label }))
+      )
+      .then(({ id, label }) => ({
+        id: new ObjectId(id),
+        label: makeLabel(label),
+      }))
+      .then(({ id, label }) => actions.update(id, label))
+      .then(() => res.sendStatus(StatusCodes.OK))
+      .catch(handleError(res))
+  );
+  router.delete("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) => new ObjectId(id))
+      .then(actions.delete)
+      .then(() => res.sendStatus(StatusCodes.OK))
       .catch(handleError(res))
   );
   return router;

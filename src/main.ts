@@ -19,7 +19,7 @@ import MongoDBConfig from "./Database/MongoDB/MongoDBConfig";
       const mongodbConfig: MongoDBConfig = {
         url: `mongodb://${config.databaseHost}:27017`,
         database: "bookmarks",
-        collections: { link: "links" },
+        collections: { link: "links", label: "labels" },
       };
       const dbActions: DatabaseActions = MongoDBProvider(mongodbConfig);
       createApp(dbActions)(service, handler).listen(

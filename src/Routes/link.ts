@@ -10,64 +10,56 @@ import LinkActions from "../Database/LinkActions";
 import readParam from "./utils/readParam";
 import { ObjectId } from "mongodb";
 
-const link =
-  (actions: LinkActions) => (service: LinkService, handler: Handler) => {
-    const router = Router();
-    router.get("/tagged", (req, res) =>
+const link = (actions: LinkActions) => {
+  const router = Router();
+  /*router.get("/tagged", (req, res) =>
       readQuery(req, "label", Errors.NoLabel)
         .then((label) => handler.readLabelLinks(label))
         .then((links) => res.json(links))
         .catch(handleError(res))
-    );
-    router.post("/", (req, res) =>
-      readBody(req, "link", Errors.NoLink)
-        .then(makeLink) //move to model world
-        .then(actions.create) //perform db action
-        .then((id) => res.status(StatusCodes.CREATED).json(id))
-        .catch(handleError(res))
-    );
-    router.get("/:id", (req, res) =>
-      readParam(req, "id", Errors.NoIDParam)
-        .then((id) => new ObjectId(id))
-        .then(actions.read)
-        .then((id) => res.json(id))
-        .catch(handleError(res))
-    );
-    router.put("/:id", (req, res) =>
-      readParam(req, "id", Errors.NoIDParam)
-        .then((id) =>
-          readBody(req, "link", Errors.NoLink).then((link) => ({ id, link }))
-        )
-        .then(({ id, link }) => ({
-          id: new ObjectId(id),
-          link: makeLink(link),
-        }))
-        .then(({ id, link }) => actions.update(id, link))
-        .then(() => res.sendStatus(StatusCodes.OK))
-        .catch(handleError(res))
-    );
-    router.delete("/:id", (req, res) =>
-      readParam(req, "id", Errors.NoIDParam)
-        .then((id) => new ObjectId(id))
-        .then(actions.delete)
-        .then(() => res.sendStatus(StatusCodes.OK))
-        .catch(handleError(res))
-    );
-    /*router.get("/", (req, res) =>
-      readQuery(req, "link", Errors.NoLink)
-        .then(makeLink)
-        .then(actions.find)
-        .then((id) => res.json(id))
-        .catch(handleError(res))
-    );
-    router.delete("/", (req, res) =>
-      readQuery(req, "link", Errors.NoLink)
-        .then((link) => service.getLinkID({ link }))
-        .then((id) => service.removeLink(id))
-        .then(() => res.sendStatus(StatusCodes.OK))
-        .catch(handleError(res))
     );*/
-    return router;
-  };
+  router.post("/", (req, res) =>
+    readBody(req, "link", Errors.NoLink)
+      .then(makeLink) //move to model world
+      .then(actions.create) //perform db action
+      .then((id) => res.status(StatusCodes.CREATED).json(id))
+      .catch(handleError(res))
+  );
+  router.get("/id", (req, res) =>
+    readQuery(req, "link", Errors.NoLink)
+      .then(makeLink)
+      .then(actions.find)
+      .then((id) => res.json(id))
+      .catch(handleError(res))
+  );
+  router.get("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) => new ObjectId(id))
+      .then(actions.read)
+      .then((id) => res.json(id))
+      .catch(handleError(res))
+  );
+  router.put("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) =>
+        readBody(req, "link", Errors.NoLink).then((link) => ({ id, link }))
+      )
+      .then(({ id, link }) => ({
+        id: new ObjectId(id),
+        link: makeLink(link),
+      }))
+      .then(({ id, link }) => actions.update(id, link))
+      .then(() => res.sendStatus(StatusCodes.OK))
+      .catch(handleError(res))
+  );
+  router.delete("/:id", (req, res) =>
+    readParam(req, "id", Errors.NoIDParam)
+      .then((id) => new ObjectId(id))
+      .then(actions.delete)
+      .then(() => res.sendStatus(StatusCodes.OK))
+      .catch(handleError(res))
+  );
+  return router;
+};
 
 export default link;
