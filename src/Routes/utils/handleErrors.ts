@@ -5,6 +5,7 @@ import { Response } from "express";
 export const Errors = {
   NoLink: "NoLink",
   NoLabel: "NoLabel",
+  NoIDParam: "NoIDParam",
   NoLabelParam: "NoLabelParam",
 } as const;
 
@@ -17,13 +18,15 @@ const handleError = (res: Response) => (e: Errors) => {
     case Errors.NoLabel:
     case Errors.NoLabelParam:
       return res.status(StatusCodes.BAD_REQUEST).send("Label required");
+    case Errors.NoIDParam:
+      return res.status(StatusCodes.BAD_REQUEST).send("ID required");
     case ServiceErrors.AlreadyExists:
       return res.sendStatus(StatusCodes.CONFLICT);
     case ServiceErrors.NotFound:
       return res.sendStatus(StatusCodes.NOT_FOUND);
   }
   console.error("Error not handled : ", e);
-  throw Error("unhandled error");
+  res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
 };
 
 export default handleError;

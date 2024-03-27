@@ -3,6 +3,7 @@ import handleError, { Errors } from "./utils/handleErrors";
 import Bookmark from "../Model/Bookmark";
 import ServiceErrors from "../Service/ServiceErrors";
 import Service from "../Service/Service";
+import { getBookmarkValue } from "../Model/Adaptor";
 
 const all = (service: Service) =>
   Router().get("/", (_, res) =>
@@ -34,7 +35,7 @@ const all = (service: Service) =>
           )
         )
       )
-      .then((bookmarks: Bookmark[]) => res.json(bookmarks))
+      .then((bookmarks) => res.json(bookmarks))
       .catch(handleError(res))
   );
 

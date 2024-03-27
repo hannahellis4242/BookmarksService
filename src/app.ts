@@ -6,18 +6,20 @@ import label from "./Routes/label";
 import link from "./Routes/link";
 import tag from "./Routes/tag";
 import Handler from "./Handlers/Handler";
+import DatabaseActions from "./Database/DatabaseActions";
 
-const createApp = (service: Service, handler: Handler) => {
-  const app = express();
-  app.use(morgan("combined"));
-  app.use(json());
+const createApp =
+  (dbActions: DatabaseActions) => (service: Service, handler: Handler) => {
+    const app = express();
+    app.use(morgan("combined"));
+    app.use(json());
 
-  app.use("/label", label(service, handler));
-  app.use("/link", link(service, handler));
-  app.use("/tag", tag(handler));
-  app.use("/all", all(service));
+    app.use("/label", label(service, handler));
+    app.use("/link", link(dbActions.link)(service, handler));
+    app.use("/tag", tag(handler));
+    app.use("/all", all(service));
 
-  return app;
-};
+    return app;
+  };
 
 export default createApp;

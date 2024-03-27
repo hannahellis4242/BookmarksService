@@ -1,7 +1,7 @@
 import Label from "./Label";
 import Link from "./Link";
 
-export default interface Bookmark {
+export default interface Tag {
   link: Link;
-  labels: Label[];
+  label: Label;
 }
